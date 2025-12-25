@@ -3,225 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <title>Sistem Peminjaman Buku</title>
-
-<!-- FAVICON (LOGO TAB) -->
-
-<style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
-
-body{
-  margin:0;
-  min-height:100vh;
-  background:#f4f6f8;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-:root{
-  --w:360px;
-}
-
-/* CARD */
-.card{
-  width:var(--w);
-  background:white;
-  padding:24px;
-  border-radius:16px;
-  box-shadow:0 10px 25px rgba(0,0,0,.1);
-  text-align:center;
-}
-
-h2,h3{margin-bottom:14px;color:#111}
-
-input{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  margin-top:12px;
-  background:#2563eb;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:15px;
-}
-button:hover{background:#1e40af}
-
-.hidden{display:none}
-
-/* POPUP */
-#overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:none;
-}
-
-#popup{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:300px;
-  background:white;
-  padding:20px;
-  border-radius:14px;
-  text-align:center;
-  display:none;
-  box-shadow:0 10px 25px rgba(0,0,0,.2);
-}
-</style>
+<link rel="icon" href="logo.png">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- POPUP -->
-<div id="overlay"></div>
-<div id="popup">
-  <p id="popupText"></p>
-  <button onclick="tutupPopup()">OK</button>
-</div>
-
-<!-- LOGIN -->
 <div class="card" id="login">
   <h2>Log Masuk</h2>
-  <input id="user" placeholder="Nama Pengguna">
-  <input id="pass" type="password" placeholder="Kata Laluan">
-  <button onclick="buatLogin()">Log Masuk</button>
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Log Masuk</button>
 </div>
 
-<!-- MENU -->
 <div class="card hidden" id="menu">
-  <h3>Menu Utama</h3>
-  <button onclick="buka('pinjam')">Peminjaman Buku</button>
-  <button onclick="buka('pulang')">Pemulangan Buku</button>
-  <button onclick="logout()">Log Keluar</button>
+  <button onclick="show('pinjam')">Peminjaman</button>
+  <button onclick="show('pulang')">Pemulangan</button>
 </div>
 
-<!-- PINJAM -->
 <div class="card hidden" id="pinjam">
-  <h3>Peminjaman Buku</h3>
-  <input id="namaPinjam" placeholder="Nama Murid">
-  <input id="kelasPinjam" placeholder="Kelas">
-  <input id="barcodePinjam" placeholder="Barcode Buku">
-  <button onclick="hantarPinjam()">Hantar</button>
-  <button onclick="kembali()">Kembali</button>
+  <input id="namaP" placeholder="Nama">
+  <input id="kelasP" placeholder="Kelas">
+  <input id="barcodeP" placeholder="Barcode">
+  <input id="bukuP" readonly>
+  <button onclick="pinjam()">Hantar</button>
 </div>
 
-<!-- PULANG -->
 <div class="card hidden" id="pulang">
-  <h3>Pemulangan Buku</h3>
-  <input id="namaPulang" placeholder="Nama Murid">
-  <input id="barcodePulang" placeholder="Barcode Buku">
-  <button onclick="hantarPulang()">Hantar</button>
-  <button onclick="kembali()">Kembali</button>
+  <input id="namaR" placeholder="Nama">
+  <input id="barcodeR" placeholder="Barcode">
+  <input id="bukuR" readonly>
+  <button onclick="pulang()">Hantar</button>
 </div>
 
-<script>
-/* AKAUN LOGIN */
-const akaun = {
-  admin:"1234",
-  user:"1111"
-};
-
-/* SIMPAN PAGE */
-function simpanPage(id){
-  localStorage.setItem("page",id);
-}
-function dapatPage(){
-  return localStorage.getItem("page") || "login";
-}
-
-/* POPUP */
-function popup(teks){
-  popupText.innerText = teks;
-  overlay.style.display = "block";
-  popup.style.display = "block";
-}
-function tutupPopup(){
-  overlay.style.display = "none";
-  popup.style.display = "none";
-}
-
-/* RESET INPUT */
-function resetInput(){
-  document.querySelectorAll("input").forEach(i=>i.value="");
-}
-
-/* LOGIN */
-function buatLogin(){
-  if(akaun[user.value] === pass.value){
-    login.classList.add("hidden");
-    menu.classList.remove("hidden");
-    simpanPage("menu");
-    resetInput();
-  }else{
-    popup("Log masuk tidak sah");
-  }
-}
-
-/* NAV */
-function buka(id){
-  menu.classList.add("hidden");
-  pinjam.classList.add("hidden");
-  pulang.classList.add("hidden");
-  document.getElementById(id).classList.remove("hidden");
-  simpanPage(id);
-  resetInput();
-}
-
-function kembali(){
-  pinjam.classList.add("hidden");
-  pulang.classList.add("hidden");
-  menu.classList.remove("hidden");
-  simpanPage("menu");
-  resetInput();
-}
-
-function logout(){
-  menu.classList.add("hidden");
-  pinjam.classList.add("hidden");
-  pulang.classList.add("hidden");
-  login.classList.remove("hidden");
-  simpanPage("login");
-  resetInput();
-}
-
-/* PINJAM */
-function hantarPinjam(){
-  if(!namaPinjam.value || !kelasPinjam.value || !barcodePinjam.value){
-    popup("Sila lengkapkan semua maklumat");
-    return;
-  }
-  popup("Peminjaman berjaya");
-  kembali();
-}
-
-/* PULANG */
-function hantarPulang(){
-  if(!namaPulang.value || !barcodePulang.value){
-    popup("Sila lengkapkan semua maklumat");
-    return;
-  }
-  popup("Pemulangan berjaya");
-  kembali();
-}
-
-/* LOAD PAGE */
-window.onload = ()=>{
-  const p = dapatPage();
-  document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
-  document.getElementById(p).classList.remove("hidden");
-};
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
