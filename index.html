@@ -1,40 +1,29 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-<meta charset="UTF-8">
-<title>Sistem Peminjaman Buku</title>
-<link rel="icon" href="logo.png">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="card" id="login">
+<div class="page active" id="loginPage">
   <h2>Log Masuk</h2>
-  <input id="user" placeholder="Username">
-  <input id="pass" type="password" placeholder="Password">
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
   <button onclick="login()">Log Masuk</button>
 </div>
 
-<div class="card hidden" id="menu">
-  <button onclick="show('pinjam')">Peminjaman</button>
-  <button onclick="show('pulang')">Pemulangan</button>
+<div class="page" id="menuPage">
+  <button onclick="showPage('pinjamPage')">Peminjaman</button>
+  <button onclick="showPage('pulangPage')">Pemulangan</button>
+  <button onclick="logout()">Logout</button>
 </div>
 
-<div class="card hidden" id="pinjam">
-  <input id="namaP" placeholder="Nama">
-  <input id="kelasP" placeholder="Kelas">
-  <input id="barcodeP" placeholder="Barcode">
-  <input id="bukuP" readonly>
-  <button onclick="pinjam()">Hantar</button>
+<div class="page" id="pinjamPage">
+  <h3>Peminjaman</h3>
+  <input placeholder="Nama">
+  <input placeholder="Kelas">
+  <input placeholder="Barcode">
+  <button>Hantar</button>
+  <button onclick="showPage('menuPage')">Kembali</button>
 </div>
 
-<div class="card hidden" id="pulang">
-  <input id="namaR" placeholder="Nama">
-  <input id="barcodeR" placeholder="Barcode">
-  <input id="bukuR" readonly>
-  <button onclick="pulang()">Hantar</button>
+<div class="page" id="pulangPage">
+  <h3>Pemulangan</h3>
+  <input placeholder="Nama">
+  <input placeholder="Barcode">
+  <button>Hantar</button>
+  <button onclick="showPage('menuPage')">Kembali</button>
 </div>
-
-<script src="script.js"></script>
-</body>
-</html>
